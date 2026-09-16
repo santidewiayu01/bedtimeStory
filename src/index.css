@@ -1,111 +1,109 @@
-:root {
-  --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
-  --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+@import "tailwindcss";
 
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
+/* ------------------------------------------------------------------
+   MINILEMON DESIGN SYSTEM
+   Tokens are exposed both as CSS variables (for raw CSS) and via the
+   Tailwind v4 @theme block (so utilities like bg-navy-900 / text-yellow
+   / rounded-card are generated automatically).
+------------------------------------------------------------------- */
+@theme {
+  /* Typography */
+  --font-heading: 'Fredoka', 'Segoe UI', system-ui, sans-serif;
+  --font-sans: 'Plus Jakarta Sans', 'Segoe UI', system-ui, sans-serif;
 
-  font: 18px/145% var(--sans);
-  letter-spacing: 0.18px;
-  color-scheme: light dark;
-  color: var(--text);
-  background: var(--bg);
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  /* Core navy scale (primary dark surfaces) */
+  --color-navy-950: #0a0f2b;
+  --color-navy-900: #101a3f;
+  --color-navy-800: #172352;
+  --color-navy-700: #202f6b;
+  --color-navy-600: #2c3d85;
 
-  @media (max-width: 1024px) {
-    font-size: 16px;
-  }
+  /* Accent yellow (CTAs, highlights) */
+  --color-yellow-300: #ffe27a;
+  --color-yellow-400: #ffc93c;
+  --color-yellow-500: #f5b400;
+
+  /* Secondary accents used across future sections */
+  --color-lavender-100: #ece8ff;
+  --color-lavender-400: #8b7cf6;
+  --color-mint-400: #34c78e;
+  --color-coral-400: #ff7a59;
+
+  /* Purple/galaxy scale — used by the Cerita Bedtime Stories band */
+  --color-purple-950: #1c1140;
+  --color-purple-900: #271a52;
+  --color-purple-800: #352369;
+  --color-purple-700: #452d82;
+
+  /* Neutrals */
+  --color-cream-50: #fdfcf8;
+  --color-cream-100: #f7f4ec;
+  --color-ink-900: #100f1a;
+  --color-ink-600: #565274;
+
+  /* Radius */
+  --radius-card: 1.5rem;
+  --radius-pill: 999px;
+
+  /* Shadow */
+  --shadow-soft: 0 20px 40px -16px rgba(10, 15, 43, 0.35);
+  --shadow-button: 0 10px 20px -6px rgba(245, 180, 0, 0.55);
+
+  /* Container */
+  --container-app: 1280px;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
-    --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
-  }
+* {
+  box-sizing: border-box;
+}
 
-  #social .button-icon {
-    filter: invert(1) brightness(2);
-  }
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   margin: 0;
+  font-family: var(--font-sans);
+  background: var(--color-cream-50);
+  color: var(--color-ink-900);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-#root {
-  width: 1126px;
-  max-width: 100%;
-  margin: 0 auto;
-  text-align: center;
-  border-inline: 1px solid var(--border);
-  min-height: 100svh;
-  display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
+h1, h2, h3, h4 {
+  font-family: var(--font-heading);
+  margin: 0;
 }
 
-h1,
-h2 {
-  font-family: var(--heading);
-  font-weight: 500;
-  color: var(--text-h);
-}
-
-h1 {
-  font-size: 56px;
-  letter-spacing: -1.68px;
-  margin: 32px 0;
-  @media (max-width: 1024px) {
-    font-size: 36px;
-    margin: 20px 0;
-  }
-}
-h2 {
-  font-size: 24px;
-  line-height: 118%;
-  letter-spacing: -0.24px;
-  margin: 0 0 8px;
-  @media (max-width: 1024px) {
-    font-size: 20px;
-  }
-}
 p {
   margin: 0;
 }
 
-code,
-.counter {
-  font-family: var(--mono);
-  display: inline-flex;
-  border-radius: 4px;
-  color: var(--text-h);
+button {
+  font-family: inherit;
+  cursor: pointer;
 }
 
-code {
-  font-size: 15px;
-  line-height: 135%;
-  padding: 4px 8px;
-  background: var(--code-bg);
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Hides the scrollbar on the horizontal stories carousel while
+   keeping it scrollable/swipeable (mouse drag, touch, arrow buttons). */
+.scrollbar-none {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
