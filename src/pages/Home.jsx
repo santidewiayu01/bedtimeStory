@@ -1,45 +1,45 @@
-import { lazy, Suspense } from 'react'
 import CeritaSection from '../components/home/CeritaSection'
 import FeaturesSection from '../components/home/FeaturesSection'
+import ImmersiveHero from '../components/immersive/ImmersiveHero'
+import PortalTeaser from '../components/immersive/PortalTeaser'
 import ScienceSection from '../components/home/ScienceSection'
+import ScrollScene from '../components/immersive/ScrollScene'
 import VideoSection from '../components/home/VideoSection'
-
-// Code-split: three.js + @react-three/fiber/drei are a heavy chunk,
-// and they're now needed ONLY for the immersive Hero (not the whole
-// page anymore) — loading them lazily keeps the initial bundle light.
-const ImmersiveHero = lazy(
-  () => import('../components/immersive/ImmersiveHero'),
-)
+import { usePageSceneSnap } from '../components/immersive/sceneSnap'
+import { CERITA_DECOR, FEATURES_DECOR, SCIENCE_DECOR, VIDEO_DECOR } from '../data/sceneDecor'
 
 /**
- * Solid-color placeholder shown for the brief moment the 3D chunk is
- * still loading. Sized to match ImmersiveHero's own pinned viewport
- * (100vh) so there's no layout jump once it's ready.
- */
-function HeroFallback() {
-  return (
-    <div className="h-screen bg-gradient-to-b from-navy-950 to-purple-950" />
-  )
-}
-
-/**
- * Homepage structure: the immersive 3D journey is fully contained
- * inside ImmersiveHero (a tall pinned section) — everything after it
- * is plain, ordinary document flow. Story/Science/Video no longer
- * register themselves with any scroll/camera system; they don't know
- * the 3D world exists.
+ * One continuous 2.5D journey: the Hero (its own camera, see
+ * ImmersiveHero) hands over to the sections below, each wrapped in a
+ * ScrollScene that gives it the same depth language (rise-from-depth +
+ * parallax sprites + the rocket's flight). The sections themselves are
+ * unchanged. usePageSceneSnap() glides between scene rest points in 0.7s.
  */
 function Home() {
+  usePageSceneSnap()
+
   return (
     <>
-      <Suspense fallback={<HeroFallback />}>
+      {/* isolate: keeps the Hero's z-10 overlay inside its own stacking context so the
+          portal (and later Bedtime Stories' rounded top) can overlap its bottom edge. */}
+      <div className="relative isolate">
         <ImmersiveHero />
-      </Suspense>
+      </div>
 
-      <CeritaSection />
-      <ScienceSection />
-      <VideoSection />
-      <FeaturesSection />
+      <PortalTeaser />
+
+      <ScrollScene far decor={CERITA_DECOR}>
+        <CeritaSection />
+      </ScrollScene>
+      <ScrollScene decor={SCIENCE_DECOR}>
+        <ScienceSection />
+      </ScrollScene>
+      <ScrollScene decor={VIDEO_DECOR}>
+        <VideoSection />
+      </ScrollScene>
+      <ScrollScene decor={FEATURES_DECOR}>
+        <FeaturesSection />
+      </ScrollScene>
     </>
   )
 }

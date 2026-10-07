@@ -1,8 +1,8 @@
 import { motion } from 'framer-motion'
-import { ChevronLeft, ChevronRight, Moon } from 'lucide-react'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
-import { bedtimeStories } from '../../data/stories'
-import Button from '../ui/Button'
+import { Link } from 'react-router-dom'
+import { bedtimeStories, CERITA_BACKGROUND, TEASER_BEDTIME } from '../../data/stories'
 import Container from '../ui/Container'
 import StoryCard from '../ui/StoryCard'
 
@@ -42,19 +42,14 @@ function CeritaSection() {
   }
 
   return (
-    <section className="relative -mt-8 overflow-hidden rounded-t-[2.5rem] bg-gradient-to-b from-purple-900 via-purple-900 to-purple-950 py-14 sm:py-16">
-      {/* Decorative starfield, consistent with the Hero */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 opacity-60"
-        style={{
-          backgroundImage:
-            'radial-gradient(1.5px 1.5px at 15% 25%, rgba(255,255,255,0.5), transparent), radial-gradient(2px 2px at 75% 10%, rgba(255,255,255,0.45), transparent), radial-gradient(1.5px 1.5px at 40% 80%, rgba(255,255,255,0.4), transparent), radial-gradient(2px 2px at 92% 70%, rgba(255,255,255,0.4), transparent)',
-        }}
-      />
-
+    <section
+      className="relative -mt-8 overflow-hidden rounded-t-[2.5rem] bg-purple-950 bg-cover bg-center py-14 sm:py-16"
+      style={{ backgroundImage: `url("${CERITA_BACKGROUND}")` }}
+    >
       <Container className="relative">
-        <div className="grid gap-10 lg:grid-cols-[280px_1fr] lg:items-center lg:gap-8">
+        {/* minmax(0,1fr) on mobile: without it the single grid column grows to the
+            carousel's full scroll width and centred content ends up off-screen. */}
+        <div className="grid grid-cols-[minmax(0,1fr)] gap-10 lg:grid-cols-[280px_minmax(0,1fr)] lg:items-center lg:gap-8">
           {/* Left: section intro */}
           <motion.div
             initial={{ opacity: 0, y: 16 }}
@@ -63,31 +58,24 @@ function CeritaSection() {
             transition={{ duration: 0.5, ease: 'easeOut' }}
             className="text-center lg:text-left"
           >
-            <div className="flex items-center justify-center gap-3 lg:justify-start">
-              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white/10 text-yellow-400">
-                <Moon size={20} />
-              </span>
-              <div className="text-left">
-                <p className="text-xs font-semibold uppercase tracking-wide text-white/50">
-                  Cerita
-                </p>
-                <h2 className="font-heading text-xl font-bold text-white sm:text-2xl">
-                  Bedtime Stories
-                </h2>
-              </div>
-            </div>
-
-            <p className="mx-auto mt-4 max-w-xs text-sm text-white/65 sm:text-base lg:mx-0">
-              Cerita sebelum tidur yang seru, penuh nilai kebaikan dan
-              inspirasi.
-            </p>
-
-            <Button
-              variant="primary"
-              className="mt-6 px-5 py-2.5 text-sm"
+            {/* Original "Bedtime Stories" teaser card (title, blurb and arrow are
+                part of the artwork). Whole card is the link to all stories. */}
+            <h2 className="sr-only">Cerita Bedtime Stories</h2>
+            <Link
+              to="/cerita"
+              aria-label="Lihat semua cerita — Bedtime Stories"
+              className="mx-auto block w-full max-w-[17.5rem] transition-transform duration-300 hover:-translate-y-1 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-yellow-400 lg:mx-0"
             >
-              Lihat Semua Cerita
-            </Button>
+              <img
+                src={TEASER_BEDTIME.src}
+                width={TEASER_BEDTIME.width}
+                height={TEASER_BEDTIME.height}
+                alt=""
+                decoding="async"
+                draggable="false"
+                className="block h-auto w-full select-none drop-shadow-[0_18px_28px_rgba(10,15,43,0.45)]"
+              />
+            </Link>
           </motion.div>
 
           {/* Right: horizontal story carousel */}

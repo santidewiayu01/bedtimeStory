@@ -53,16 +53,27 @@
   --container-app: 1280px;
 }
 
+:root {
+  /* Height of the sticky Navbar. The Hero is sized as 100svh minus
+     this so its full illustration sits under the bar. */
+  --nav-h: 4.5rem;
+}
+
 * {
   box-sizing: border-box;
 }
 
+/* `auto`, not `smooth`: scene snapping is a GSAP tween (0.7s); native
+   smooth-scroll would fight it. `overflow-x: clip` (unlike hidden) cannot
+   create a scroll container, so the sticky Navbar/Hero keep working. */
 html {
-  scroll-behavior: smooth;
+  scroll-behavior: auto;
+  overflow-x: clip;
 }
 
 body {
   margin: 0;
+  overflow-x: clip;
   font-family: var(--font-sans);
   background: var(--color-cream-50);
   color: var(--color-ink-900);
@@ -106,4 +117,46 @@ a {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+/* ------------------------------------------------------------------
+   HERO 2.5D — idle motion for decoration sprites.
+   Transform/opacity only (compositor-friendly). These run on the
+   INNER sprite node; GSAP moves the layer wrapper, so they never
+   conflict. Disabled by the reduced-motion block above.
+------------------------------------------------------------------- */
+@keyframes hero-float {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(-1.5deg); }
+  50% { transform: translate3d(0, -9px, 0) rotate(1.5deg); }
+}
+
+@keyframes hero-twinkle {
+  0%, 100% { transform: scale(1) rotate(0deg); opacity: 1; }
+  50% { transform: scale(0.82) rotate(8deg); opacity: 0.75; }
+}
+
+.hero-float {
+  animation: hero-float var(--float-dur, 8s) ease-in-out var(--float-delay, 0s) infinite;
+  will-change: transform;
+}
+
+.hero-twinkle {
+  animation: hero-twinkle var(--float-dur, 4.5s) ease-in-out var(--float-delay, 0s) infinite;
+}
+
+/* ------------------------------------------------------------------
+   PORTAL TEASER — feathers the wide artwork's top/bottom/side edges
+   into the section wash so it never reads as a pasted rectangle.
+   The mask only touches the outer band of starry background; the
+   three cards sit well inside it.
+------------------------------------------------------------------- */
+.portal-feather {
+  -webkit-mask-image:
+    linear-gradient(to bottom, transparent 0, #000 9%, #000 92%, transparent 100%),
+    linear-gradient(to right, transparent 0, #000 2%, #000 98%, transparent 100%);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(to bottom, transparent 0, #000 9%, #000 92%, transparent 100%),
+    linear-gradient(to right, transparent 0, #000 2%, #000 98%, transparent 100%);
+  mask-composite: intersect;
 }

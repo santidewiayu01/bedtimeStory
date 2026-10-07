@@ -2,23 +2,36 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { Menu, Search, User, X } from 'lucide-react'
 import { useState } from 'react'
 import { NavLink } from 'react-router-dom'
+import { LOGO } from '../../data/heroAssets'
 import { navLinks } from '../../data/navLinks'
 import Button from '../ui/Button'
 
 function Logo() {
+  const { src, width, height, bbox } = LOGO
+
+  // The PNG is a 1600x800 canvas whose artwork only fills `bbox`.
+  // Crop to that box (overflow-hidden + oversized, offset image) so
+  // the real logo renders at a useful size in the bar without
+  // touching or duplicating the source file.
   return (
-    <NavLink to="/" className="flex items-center gap-2.5">
-      {/* Lemon mascot mark — placeholder until final logo art arrives */}
-      <span className="flex h-10 w-10 items-center justify-center rounded-full bg-yellow-400 text-lg font-bold text-navy-950">
-        M
-      </span>
-      <span className="flex flex-col leading-none">
-        <span className="font-heading text-lg font-bold tracking-wide text-yellow-400 [text-shadow:0_1px_3px_rgba(10,15,43,0.6)]">
-          MINILEMON
-        </span>
-        <span className="text-[10px] font-semibold tracking-[0.14em] text-white/60">
-          ILMU PENGETAHUAN
-        </span>
+    <NavLink to="/" aria-label="MiniLemon — Ilmu Pengetahuan, ke Beranda" className="flex items-center">
+      <span
+        className="relative block h-14 overflow-hidden"
+        style={{ aspectRatio: `${bbox.w} / ${bbox.h}` }}
+      >
+        <img
+          src={src}
+          alt="MiniLemon — Ilmu Pengetahuan"
+          decoding="async"
+          draggable="false"
+          className="absolute max-w-none select-none [filter:drop-shadow(0_0_1.5px_rgba(255,255,255,0.75))]"
+          style={{
+            width: `${(width / bbox.w) * 100}%`,
+            height: `${(height / bbox.h) * 100}%`,
+            left: `${(-bbox.x / bbox.w) * 100}%`,
+            top: `${(-bbox.y / bbox.h) * 100}%`,
+          }}
+        />
       </span>
     </NavLink>
   )
@@ -63,7 +76,7 @@ function Navbar() {
     // for the handful of pixels where a bright 3D highlight could still
     // peek through the translucent surface.
     <header className="sticky top-0 z-50 border-b border-white/10 bg-navy-950/97 shadow-[0_8px_30px_-14px_rgba(0,0,0,0.85)] backdrop-blur-lg">
-      <div className="mx-auto flex w-full max-w-[1280px] items-center justify-between gap-4 px-5 py-3 sm:px-8 lg:px-10">
+      <div className="mx-auto flex h-[calc(var(--nav-h)-1px)] w-full max-w-[1280px] items-center justify-between gap-4 px-5 sm:px-8 lg:px-10">
         <Logo />
 
         {/* Desktop nav */}

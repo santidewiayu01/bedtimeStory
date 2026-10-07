@@ -1,58 +1,10 @@
-import { AnimatePresence, motion } from 'framer-motion'
-import {
-  Cpu,
-  Earth,
-  FlaskConical,
-  Globe,
-  HeartPulse,
-  Leaf,
-  PawPrint,
-  Sparkles,
-} from 'lucide-react'
-import { useState } from 'react'
-import { scienceArticles, scienceCategories } from '../../data/science'
-import Button from '../ui/Button'
+import { motion } from 'framer-motion'
+import { Link } from 'react-router-dom'
+import { SCIENCE_CATEGORY_CARDS } from '../../data/science'
+import { TEASER_ILMU } from '../../data/stories'
 import Container from '../ui/Container'
-import ScienceCard from '../ui/ScienceCard'
-
-const CATEGORY_ICONS = {
-  Sparkles,
-  Globe,
-  PawPrint,
-  HeartPulse,
-  Earth,
-  Cpu,
-  Leaf,
-}
-
-function CategoryPill({ category, active, onClick }) {
-  const Icon = CATEGORY_ICONS[category.icon]
-
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      aria-pressed={active}
-      className={`inline-flex shrink-0 items-center gap-1.5 rounded-[var(--radius-pill)] px-4 py-2 text-sm font-semibold transition-colors ${
-        active
-          ? 'bg-mint-400 text-white'
-          : 'bg-ink-900/5 text-ink-600 hover:bg-ink-900/10'
-      }`}
-    >
-      <Icon size={14} />
-      {category.label}
-    </button>
-  )
-}
 
 function ScienceSection() {
-  const [activeCategory, setActiveCategory] = useState('semua')
-
-  const filteredArticles =
-    activeCategory === 'semua'
-      ? scienceArticles
-      : scienceArticles.filter((article) => article.category === activeCategory)
-
   return (
     <motion.section
       initial={{ opacity: 0, y: 24 }}
@@ -64,60 +16,53 @@ function ScienceSection() {
       className="bg-cream-50 py-14 sm:py-16"
     >
       <Container>
-        <div className="grid gap-10 lg:grid-cols-[260px_1fr] lg:gap-8">
-          {/* Left: section intro */}
+        <div className="grid grid-cols-[minmax(0,1fr)] gap-10 lg:grid-cols-[260px_minmax(0,1fr)] lg:items-center lg:gap-8">
+          {/* Left: original teaser card (title, blurb and arrow are part of the artwork) */}
           <div className="text-center lg:text-left">
-            <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-mint-400/15 text-mint-400 lg:mx-0">
-              <FlaskConical size={22} />
-            </span>
-            <h2 className="mt-4 font-heading text-2xl font-bold text-ink-900 sm:text-3xl">
-              Ilmu Pengetahuan
-            </h2>
-            <p className="mx-auto mt-2 max-w-xs text-sm text-ink-600 sm:text-base lg:mx-0">
-              Artikel seru untuk menambah pengetahuanmu setiap hari.
-            </p>
-            <Button
-              variant="mint"
-              className="mt-6 px-5 py-2.5 text-sm"
+            <h2 className="sr-only">Ilmu Pengetahuan</h2>
+            <Link
+              to="/ilmu"
+              aria-label="Jelajahi semua — Ilmu Pengetahuan"
+              className="mx-auto block w-full max-w-[17.5rem] transition-transform duration-300 hover:-translate-y-1 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-mint-400 lg:mx-0"
             >
-              Jelajahi Semua
-            </Button>
+              <img
+                src={TEASER_ILMU.src}
+                width={TEASER_ILMU.width}
+                height={TEASER_ILMU.height}
+                alt=""
+                decoding="async"
+                draggable="false"
+                className="block h-auto w-full select-none drop-shadow-[0_16px_24px_rgba(10,15,43,0.25)]"
+              />
+            </Link>
           </div>
 
-          {/* Right: category filter + article carousel */}
-          <div>
-            <div className="scrollbar-none -mx-5 flex gap-2 overflow-x-auto px-5 pb-1 sm:-mx-8 sm:px-8 lg:mx-0 lg:flex-wrap lg:px-0">
-              {scienceCategories.map((category) => (
-                <CategoryPill
-                  key={category.id}
-                  category={category}
-                  active={activeCategory === category.id}
-                  onClick={() => setActiveCategory(category.id)}
-                />
-              ))}
-            </div>
-
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={activeCategory}
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -8 }}
-                transition={{ duration: 0.25, ease: 'easeOut' }}
-                className="scrollbar-none -mx-5 mt-5 flex items-stretch gap-5 overflow-x-auto px-5 pb-2 snap-x snap-mandatory sm:-mx-8 sm:gap-6 sm:px-8 lg:mx-0 lg:px-0"
-              >
-                {filteredArticles.length > 0 ? (
-                  filteredArticles.map((article) => (
-                    <ScienceCard key={article.id} article={article} />
-                  ))
-                ) : (
-                  <p className="py-6 text-sm text-ink-600">
-                    Belum ada artikel untuk kategori ini.
-                  </p>
-                )}
-              </motion.div>
-            </AnimatePresence>
-          </div>
+          {/* Right: the six category cards (original art) — one row on desktop,
+              swipeable strip on tablet/phone */}
+          <ul className="scrollbar-none -mx-5 flex snap-x snap-mandatory gap-3 overflow-x-auto px-5 pb-2 sm:-mx-8 sm:gap-4 sm:px-8 lg:mx-0 lg:grid lg:grid-cols-6 lg:gap-3 lg:overflow-visible lg:px-0 lg:pb-0">
+            {SCIENCE_CATEGORY_CARDS.map((card) => (
+              <li key={card.id} className="w-[10.5rem] shrink-0 snap-start sm:w-[12rem] lg:w-auto lg:shrink">
+                <motion.div whileHover={{ y: -4 }} transition={{ type: 'spring', stiffness: 300, damping: 22 }}>
+                  <Link
+                    to="/ilmu"
+                    aria-label={card.label}
+                    className="block focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mint-400"
+                  >
+                    <img
+                      src={card.src}
+                      width={card.width}
+                      height={card.height}
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                      draggable="false"
+                      className="block h-auto w-full select-none"
+                    />
+                  </Link>
+                </motion.div>
+              </li>
+            ))}
+          </ul>
         </div>
       </Container>
     </motion.section>

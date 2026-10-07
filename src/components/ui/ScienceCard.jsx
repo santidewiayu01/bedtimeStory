@@ -4,9 +4,9 @@ import AssetPlaceholder from './AssetPlaceholder'
 
 /**
  * Compact square-thumbnail card for the Science ("Ilmu Pengetahuan")
- * grid. Thumbnail is a placeholder — swap <AssetPlaceholder> for a
- * real <img> once final article covers are delivered; the badge,
- * action button, and text layout stay as-is.
+ * grid. Thumbnail is the article's original artwork (`article.image`);
+ * the placeholder only renders if an article has none. Badge, action
+ * button, and text layout are unchanged.
  *
  * Layout is a plain flex column (thumbnail -> content -> title ->
  * action row) so the action button sits in normal flow below the
@@ -16,7 +16,7 @@ import AssetPlaceholder from './AssetPlaceholder'
  * of whether the title wraps to one or two lines.
  */
 function ScienceCard({ article }) {
-  const { title, badge } = article
+  const { title, badge, image } = article
 
   return (
     <motion.article
@@ -25,12 +25,29 @@ function ScienceCard({ article }) {
       className="flex h-full w-[150px] shrink-0 snap-start flex-col sm:w-[170px]"
     >
       <div className="relative">
-        <AssetPlaceholder
-          label="Thumbnail"
-          ratio="1 / 1"
-          tone="light"
-          className="w-full"
-        />
+        {image ? (
+          // Square art in a square, clipped box — never stretched
+          // (object-cover on a 1:1 source) and never outside the radius.
+          <div className="aspect-square w-full overflow-hidden rounded-[var(--radius-card)] bg-lavender-100 shadow-[var(--shadow-soft)]">
+            <img
+              src={image}
+              alt=""
+              width={1254}
+              height={1254}
+              loading="lazy"
+              decoding="async"
+              draggable="false"
+              className="h-full w-full select-none object-cover"
+            />
+          </div>
+        ) : (
+          <AssetPlaceholder
+            label="Thumbnail"
+            ratio="1 / 1"
+            tone="light"
+            className="w-full"
+          />
+        )}
 
         {badge ? (
           <span className="absolute left-2.5 top-2.5 inline-flex items-center gap-1 rounded-[var(--radius-pill)] bg-mint-400 px-2 py-0.5 text-[11px] font-semibold text-white">

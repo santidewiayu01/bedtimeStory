@@ -3,9 +3,9 @@ import { Clock, Play } from 'lucide-react'
 import AssetPlaceholder from './AssetPlaceholder'
 
 /**
- * Thumbnail is a placeholder — swap <AssetPlaceholder> for a real
- * <img>/<video poster> once final frames are delivered; the badges,
- * play button, and text layout stay as-is.
+ * Thumbnail is the video's original cover (`video.thumbnail`); the
+ * placeholder only renders if a video has none. Badges, play button,
+ * and text layout are unchanged.
  *
  * `variant="featured"` renders the larger hero video card (bigger
  * play button, category pill, title + CTA row). `variant="default"`
@@ -14,7 +14,7 @@ import AssetPlaceholder from './AssetPlaceholder'
  * (`lg:w-full` lets the parent grid cell control its width there).
  */
 function VideoCard({ video, variant = 'default' }) {
-  const { title, duration, category } = video
+  const { title, duration, category, thumbnail } = video
   const isFeatured = variant === 'featured'
 
   return (
@@ -28,13 +28,28 @@ function VideoCard({ video, variant = 'default' }) {
       }
     >
       <div className="relative">
-        <AssetPlaceholder
-          label={isFeatured ? 'Thumbnail video utama' : 'Thumbnail video'}
-          ratio="16 / 9"
-          tone="light"
-          rounded="rounded-none"
-          className="w-full border-x-0 border-t-0"
-        />
+        {thumbnail ? (
+          <div className="aspect-video w-full overflow-hidden bg-lavender-100">
+            <img
+              src={thumbnail}
+              alt=""
+              width={1600}
+              height={900}
+              loading="lazy"
+              decoding="async"
+              draggable="false"
+              className="h-full w-full select-none object-cover"
+            />
+          </div>
+        ) : (
+          <AssetPlaceholder
+            label={isFeatured ? 'Thumbnail video utama' : 'Thumbnail video'}
+            ratio="16 / 9"
+            tone="light"
+            rounded="rounded-none"
+            className="w-full border-x-0 border-t-0"
+          />
+        )}
 
         {isFeatured && category ? (
           <span className="absolute left-2.5 top-2.5 rounded-[var(--radius-pill)] bg-coral-400 px-2.5 py-1 text-xs font-semibold text-white">

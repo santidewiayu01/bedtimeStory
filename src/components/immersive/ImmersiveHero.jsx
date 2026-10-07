@@ -1,20 +1,23 @@
 import { useRef } from 'react'
 import Hero from '../home/Hero'
+import HeroParallaxScene from './HeroParallaxScene'
 import {
   useCinematicWheelJack,
   useHeroProgress,
   useHeroSequence,
 } from './HeroScrollController'
-import ImmersiveScene from './ImmersiveScene'
 
 /**
- * The entire 3D journey lives HERE and ONLY here — nowhere else on the
- * page reads scroll/wheel input or moves the camera.
+ * The entire 2.5D journey lives HERE and ONLY here — nowhere else on
+ * the page reads scroll/wheel input or moves the scene.
  *
  * Two interaction modes, chosen once via useCinematicWheelJack():
  *
  * 1) CINEMATIC (desktop mouse/trackpad) — `useHeroSequence`
- *    A plain `h-screen` section. No CSS pin/sticky trick is needed:
+ *    A plain section exactly one viewport tall MINUS the sticky
+ *    Navbar (`--nav-h`, index.css), so the whole illustration is
+ *    visible under the bar instead of its bottom being pushed below
+ *    the fold. No CSS pin/sticky trick is needed:
  *    while the journey is playing, every wheel event is
  *    preventDefault()'d, so the document simply never scrolls — the
  *    Hero stays in view "for free". Once the journey reaches its end
@@ -24,10 +27,10 @@ import ImmersiveScene from './ImmersiveScene'
  * 2) FALLBACK (touch / prefers-reduced-motion) — `useHeroProgress`
  *    The original "pinned scrollytelling" pattern:
  *
- *      <section h-[460vh]>              <- tall "track": scrolling
- *        <div sticky top-0 h-screen>    <- through this pins the inner
- *          <ImmersiveScene />           <- box via native `position:
- *          <Hero />                     <- sticky`, no JS pin logic
+ *      <section h-[460vh]>               <- tall "track": scrolling
+ *        <div sticky top-[--nav-h]>      <- through this pins the inner
+ *          <HeroParallaxScene />         <- box via native `position:
+ *          <Hero />                      <- sticky`, no JS pin logic
  *        </div>
  *      </section>
  *
@@ -38,7 +41,7 @@ import ImmersiveScene from './ImmersiveScene'
  *    more deliberate pace too, matching the cinematic mode's slowdown,
  *    without touching the keyframe composition itself.
  *
- * Either way, HeroCamera and Hero.jsx only ever see a plain
+ * Either way, HeroParallaxScene and Hero.jsx only ever see a plain
  * `progressRef` (`{ current: number }` in 0..1) — neither of them
  * knows or cares which mode produced it.
  */
@@ -57,17 +60,22 @@ function ImmersiveHero() {
 
   if (cinematic) {
     return (
-      <section ref={sectionRef} className="relative h-screen overflow-hidden">
-        <ImmersiveScene progressRef={sequenceProgressRef} />
+      <section
+        ref={sectionRef}
+        data-scene
+        data-scene-reach="far"
+        className="relative h-[calc(100svh-var(--nav-h))] overflow-hidden"
+      >
+        <HeroParallaxScene progressRef={sequenceProgressRef} />
         <Hero progressRef={sequenceProgressRef} />
       </section>
     )
   }
 
   return (
-    <section ref={trackRef} className="relative h-[460vh]">
-      <div className="sticky top-0 h-screen overflow-hidden">
-        <ImmersiveScene progressRef={scrubProgressRef} />
+    <section ref={trackRef} data-scene-track className="relative h-[460svh]">
+      <div className="sticky top-[var(--nav-h)] h-[calc(100svh-var(--nav-h))] overflow-hidden">
+        <HeroParallaxScene progressRef={scrubProgressRef} />
         <Hero progressRef={scrubProgressRef} />
       </div>
     </section>
