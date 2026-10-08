@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
+import { ILMU_BACKGROUND_STYLE } from '../../data/cosmicBackgrounds'
 import { SCIENCE_CATEGORY_CARDS } from '../../data/science'
 import { TEASER_ILMU } from '../../data/stories'
 import Container from '../ui/Container'
@@ -11,9 +12,9 @@ function ScienceSection() {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.2 }}
       transition={{ duration: 0.5, ease: 'easeOut' }}
-      // Solid background — the immersive 3D world is confined to the
-      // Hero now, so there's nothing behind this section to reveal.
-      className="bg-cream-50 py-14 sm:py-16"
+      // Cosmic backdrop (continues into Video Pengetahuan — see cosmicBackgrounds.js)
+      className="bg-[#1b2690] bg-cover bg-center py-14 sm:py-16"
+      style={ILMU_BACKGROUND_STYLE}
     >
       <Container>
         <div className="grid grid-cols-[minmax(0,1fr)] gap-10 lg:grid-cols-[260px_minmax(0,1fr)] lg:items-center lg:gap-8">

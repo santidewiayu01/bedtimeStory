@@ -31,12 +31,16 @@ function Home() {
       <ScrollScene far decor={CERITA_DECOR}>
         <CeritaSection />
       </ScrollScene>
-      <ScrollScene decor={SCIENCE_DECOR}>
-        <ScienceSection />
-      </ScrollScene>
-      <ScrollScene decor={VIDEO_DECOR}>
-        <VideoSection />
-      </ScrollScene>
+      {/* Shared cosmic base behind Ilmu + Video: while a scene is still rising in (partly
+          transparent) you see the same night sky, not the cream page, so the two read as one. */}
+      <div className="bg-[#1b2690]">
+        <ScrollScene decor={SCIENCE_DECOR}>
+          <ScienceSection />
+        </ScrollScene>
+        <ScrollScene decor={VIDEO_DECOR}>
+          <VideoSection />
+        </ScrollScene>
+      </div>
       <ScrollScene decor={FEATURES_DECOR}>
         <FeaturesSection />
       </ScrollScene>

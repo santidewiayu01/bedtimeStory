@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
+import { VIDEO_BACKGROUND_STYLE } from '../../data/cosmicBackgrounds'
 import { TEASER_VIDEO } from '../../data/stories'
 import { videos } from '../../data/videos'
 import Container from '../ui/Container'
@@ -14,9 +15,9 @@ function VideoSection() {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.2 }}
       transition={{ duration: 0.5, ease: 'easeOut' }}
-      // Solid background — the immersive 3D world is confined to the
-      // Hero now, so there's nothing behind this section to reveal.
-      className="relative -mt-6 overflow-hidden rounded-t-[2.5rem] bg-gradient-to-b from-orange-50 via-amber-50 to-orange-100 py-10 sm:py-12"
+      // Cosmic backdrop (picks up where Ilmu Pengetahuan ends — see cosmicBackgrounds.js)
+      className="relative -mt-6 overflow-hidden bg-[#1b2690] bg-cover bg-center py-10 sm:py-12"
+      style={VIDEO_BACKGROUND_STYLE}
     >
       <Container>
         <div className="grid gap-6 lg:grid-cols-[minmax(190px,1fr)_minmax(280px,1.7fr)_minmax(280px,1.8fr)] lg:items-center lg:gap-6">
