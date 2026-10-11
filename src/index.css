@@ -160,3 +160,50 @@ a {
     linear-gradient(to right, transparent 0, #000 2%, #000 98%, transparent 100%);
   mask-composite: intersect;
 }
+
+/* ------------------------------------------------------------------
+   QUIZ + TENTANG — small shared helpers.
+   Idle motion is opt-in per element and is disabled globally by the
+   reduced-motion block above.
+------------------------------------------------------------------- */
+@keyframes bob {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(var(--bob-rot, 0deg)); }
+  50% { transform: translate3d(0, var(--bob-y, -10px), 0) rotate(calc(var(--bob-rot, 0deg) * -1)); }
+}
+.bob {
+  animation: bob var(--bob-dur, 6s) ease-in-out var(--bob-delay, 0s) infinite;
+}
+
+@keyframes shake-no {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-8px); }
+  40% { transform: translateX(7px); }
+  60% { transform: translateX(-5px); }
+  80% { transform: translateX(3px); }
+}
+.shake-no {
+  animation: shake-no 0.45s ease-in-out;
+}
+
+/* Soft wash used where a section melts into the next one */
+.fade-into-navy {
+  background-image: linear-gradient(to bottom, transparent, var(--color-navy-950));
+}
+
+/* Keeps stacked-sticky panels from clipping their own contents on short screens */
+@media (min-width: 768px) and (max-height: 640px) {
+  .stack-panel { position: relative !important; height: auto !important; }
+}
+
+/* ------------------------------------------------------------------
+   .fx-scope — used by the Quiz + Tentang pages.
+   The global resets above (p/h1-h4 margin:0, a color:inherit) are unlayered,
+   so they beat Tailwind utilities (mt-4, mx-auto, text-white...). Inside this
+   scope we hand control back to the utilities layer. Other pages are untouched.
+------------------------------------------------------------------- */
+.fx-scope :is(h1, h2, h3, h4, p) {
+  margin: revert-layer;
+}
+.fx-scope a {
+  color: revert-layer;
+}

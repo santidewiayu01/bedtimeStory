@@ -1,4 +1,7 @@
 import { motion } from 'framer-motion'
+import { Link } from 'react-router-dom'
+
+const MotionLink = motion.create(Link)
 
 const VARIANTS = {
   primary:
@@ -14,6 +17,7 @@ const VARIANTS = {
 /**
  * Shared pill-shaped button used for every CTA across the site.
  * `as="a"` + `href` renders an anchor instead of a button element.
+ * `to` renders a react-router <Link> (client-side navigation, no reload).
  */
 function Button({
   children,
@@ -23,7 +27,7 @@ function Button({
   icon: Icon,
   ...props
 }) {
-  const Tag = motion[as] ?? motion.button
+  const Tag = props.to ? MotionLink : (motion[as] ?? motion.button)
 
   return (
     <Tag
